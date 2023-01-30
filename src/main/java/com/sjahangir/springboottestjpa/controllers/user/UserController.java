@@ -23,7 +23,7 @@ public class UserController {
         return userRepository.findAll();
     }
 
-    @GetMapping("/user/{id}")
+    @GetMapping("/users/{id}")
     public User getUser(@PathVariable final int id) {
         User user = userRepository.findById(id).orElse(null);
         if (user == null) {
@@ -32,14 +32,27 @@ public class UserController {
         return user;
     }
 
-    @PostMapping("/addUser")
+    @PostMapping("/users")
     public ResponseEntity<User> addUser(@RequestBody final User user) {
         User createdUser = userRepository.save(user);
         return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
     }
 
-    @DeleteMapping("deleteUser/{id}")
+    @DeleteMapping("users/{id}")
     public void deleteUser(@PathVariable final int id) {
         userRepository.deleteById(id);
+    }
+
+    @PutMapping("users/{id}")
+    public User updateUser(@PathVariable final int id, @RequestBody final User user) {
+        User userById = userRepository.findById(id).orElse(null);
+        if (userById == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+
+        userById.setFirstName(user.getFirstName());
+        userById.setLastName(user.getLastName());
+
+        return userRepository.save(userById);
     }
 }
