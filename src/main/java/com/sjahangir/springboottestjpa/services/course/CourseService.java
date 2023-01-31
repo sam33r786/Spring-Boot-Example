@@ -37,8 +37,11 @@ public class CourseService {
     }
 
     public Course updateCourse(final int id, final Course updatedCourse) {
-        COURSES.removeIf(course -> course.getId() == id);
-        COURSES.add(updatedCourse);
+        Course findById = COURSES.stream().filter(course -> course.getId() == id).findFirst().orElse(null);
+        int index = COURSES.indexOf(findById);
+        COURSES.remove(findById);
+        updatedCourse.setId(id);
+        COURSES.add(index, updatedCourse);
         return updatedCourse;
     }
 }
