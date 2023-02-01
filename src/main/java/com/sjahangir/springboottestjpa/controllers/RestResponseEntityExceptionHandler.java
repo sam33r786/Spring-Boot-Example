@@ -1,6 +1,7 @@
 package com.sjahangir.springboottestjpa.controllers;
 
 import com.sjahangir.springboottestjpa.controllers.user.exceptions.UserNotFoundException;
+import com.sjahangir.springboottestjpa.services.car.CarNotFoundException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -29,9 +30,9 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
         return new ResponseEntity<>(errorReport, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(value = UserNotFoundException.class)
-    public ResponseEntity<ErrorReport> handleUserNotFoundException(final UserNotFoundException ex, final WebRequest webRequest) {
-        ErrorReport errorReport = new ErrorReport(new Date(), "User not found", List.of(ex.getMessage()));
+    @ExceptionHandler(value = {UserNotFoundException.class, CarNotFoundException.class})
+    public ResponseEntity<ErrorReport> handleNotFoundException(final Exception ex, final WebRequest webRequest) {
+        ErrorReport errorReport = new ErrorReport(new Date(), "Not found", List.of(ex.getMessage()));
         return new ResponseEntity<>(errorReport, HttpStatus.NOT_FOUND);
     }
 }
