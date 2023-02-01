@@ -42,7 +42,7 @@ public class UserControllerTest {
     @Test
     void test_getAllUsers() {
         when(userRepository.findAll()).thenReturn(allUsers);
-        List<User> users = userController.getUsers();
+        List<User> users = userController.getAllUsers().getBody();
         assertEquals(allUsers, users);
     }
 
@@ -50,7 +50,7 @@ public class UserControllerTest {
     void test_getUser() {
         User user = allUsers.get(0);
         when(userRepository.findById(anyInt())).thenReturn(Optional.ofNullable(user));
-        User fetchedUser = userController.getUser(2);
+        User fetchedUser = userController.getUser(2).getBody();
         assertEquals(fetchedUser, user);
     }
 

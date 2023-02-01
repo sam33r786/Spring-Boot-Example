@@ -6,7 +6,6 @@ import com.sjahangir.springboottestjpa.repositories.user.UserRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -20,18 +19,19 @@ public class UserController {
     }
 
     @GetMapping("/users")
-    public List<User> getUsers() {
-        return userRepository.findAll();
+    public ResponseEntity<List<User>> getAllUsers() {
+        List<User> allUsers = userRepository.findAll();
+        return new ResponseEntity<>(allUsers, HttpStatus.OK);
     }
 
     @GetMapping("/users/{id}")
-    public User getUser(@PathVariable final int id) {
-        User user = userRepository.findById(id).orElse(null);
-        if (user == null) {
+    public ResponseEntity<User> getUser(@PathVariable("id") final int id) {
+        User user = userRepository.findById(id).orElseThrow(() -> {
             String errorMessage = String.format("User not found for id %d", id);
             throw new UserNotFoundException(errorMessage);
-        }
-        return user;
+        });
+
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     @PostMapping("/users")
@@ -41,20 +41,23 @@ public class UserController {
     }
 
     @DeleteMapping("users/{id}")
-    public void deleteUser(@PathVariable final int id) {
+    public ResponseEntity<HttpStatus> deleteUser(@PathVariable("id") final int id) {
         userRepository.deleteById(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @PutMapping("users/{id}")
-    public User updateUser(@PathVariable final int id, @RequestBody final User user) {
-        User userById = userRepository.findById(id).orElse(null);
-        if (userById == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<User> updateUser(@PathVariable("id") final int id, @RequestBody final User user) {
+        User userById = userRepository.findById(id).orElseThrow(() -> {
+            String errorMessage = String.format("User not found for id %d", id);
+            throw new UserNotFoundException(errorMessage);
+        });
 
         userById.setFirstName(user.getFirstName());
         userById.setLastName(user.getLastName());
 
-        return userRepository.save(userById);
+        User updatedUser = userRepository.save(userById);
+
+        return new ResponseEntity<>(updatedUser, HttpStatus.OK);
     }
 }
