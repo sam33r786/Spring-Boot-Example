@@ -1,5 +1,6 @@
 package com.sjahangir.springboottestjpa.controllers.user;
 
+import com.sjahangir.springboottestjpa.controllers.user.exceptions.UserNotFoundException;
 import com.sjahangir.springboottestjpa.models.user.User;
 import com.sjahangir.springboottestjpa.repositories.user.UserRepository;
 import org.springframework.http.HttpStatus;
@@ -27,7 +28,8 @@ public class UserController {
     public User getUser(@PathVariable final int id) {
         User user = userRepository.findById(id).orElse(null);
         if (user == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+            String errorMessage = String.format("User not found for id %d", id);
+            throw new UserNotFoundException(errorMessage);
         }
         return user;
     }
