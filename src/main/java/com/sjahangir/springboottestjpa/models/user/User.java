@@ -3,6 +3,7 @@ package com.sjahangir.springboottestjpa.models.user;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotBlank;
 
 @Entity(name = "UserABC")
 public class User {
@@ -10,6 +11,8 @@ public class User {
     @Id
     @GeneratedValue
     private int id;
+
+    @NotBlank(message = "First name must be given.")
     private String firstName;
     private String lastName;
 

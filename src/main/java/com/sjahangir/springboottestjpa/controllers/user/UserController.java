@@ -3,6 +3,7 @@ package com.sjahangir.springboottestjpa.controllers.user;
 import com.sjahangir.springboottestjpa.controllers.user.exceptions.UserNotFoundException;
 import com.sjahangir.springboottestjpa.models.user.User;
 import com.sjahangir.springboottestjpa.repositories.user.UserRepository;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -36,7 +37,7 @@ public class UserController {
     }
 
     @PostMapping("/users")
-    public ResponseEntity<User> addUser(@RequestBody final User user) {
+    public ResponseEntity<User> addUser(@Valid @RequestBody final User user) {
         User createdUser = userRepository.save(user);
         return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
     }
@@ -48,7 +49,7 @@ public class UserController {
     }
 
     @PutMapping("users/{id}")
-    public ResponseEntity<User> updateUser(@PathVariable("id") final int id, @RequestBody final User user) {
+    public ResponseEntity<User> updateUser(@PathVariable("id") final int id, @Valid @RequestBody final User user) {
         User userById = userRepository.findById(id).orElseThrow(() -> {
             String errorMessage = String.format("User not found for id: %d", id);
             throw new UserNotFoundException(errorMessage);
