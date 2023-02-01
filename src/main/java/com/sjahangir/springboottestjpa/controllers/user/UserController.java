@@ -27,7 +27,7 @@ public class UserController {
     @GetMapping("/users/{id}")
     public ResponseEntity<User> getUser(@PathVariable("id") final int id) {
         User user = userRepository.findById(id).orElseThrow(() -> {
-            String errorMessage = String.format("User not found for id %d", id);
+            String errorMessage = String.format("User not found for id: %d", id);
             throw new UserNotFoundException(errorMessage);
         });
 
@@ -49,7 +49,7 @@ public class UserController {
     @PutMapping("users/{id}")
     public ResponseEntity<User> updateUser(@PathVariable("id") final int id, @RequestBody final User user) {
         User userById = userRepository.findById(id).orElseThrow(() -> {
-            String errorMessage = String.format("User not found for id %d", id);
+            String errorMessage = String.format("User not found for id: %d", id);
             throw new UserNotFoundException(errorMessage);
         });
 
